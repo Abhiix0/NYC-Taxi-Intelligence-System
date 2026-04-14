@@ -2,7 +2,7 @@ import { LineChart, Line, BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContai
 import ChartSkeleton from "./ChartSkeleton";
 import { tooltipStyle, fmtShort, fmtDollar } from "@/lib/chartUtils";
 
-interface DistanceFareRow { distance_miles: number; avg_fare: number; }
+interface DistanceFareRow { distance_range: string; avg_fare: number; }
 interface TipsDistRow     { tip_category: string;   trip_count: number; }
 
 interface ValueInsightsProps {
@@ -42,7 +42,7 @@ const ValueInsights = ({ distanceFare = [], tipsDist = [] }: ValueInsightsProps)
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={distanceFare}>
                   <XAxis
-                    dataKey="distance_miles"
+                    dataKey="distance_range"
                     tick={{ fontFamily: "'Patrick Hand'", fontSize: 12 }}
                     label={{ value: "miles", fontFamily: "'Patrick Hand'", position: "insideBottom", offset: -2 }}
                   />
@@ -53,7 +53,7 @@ const ValueInsights = ({ distanceFare = [], tipsDist = [] }: ValueInsightsProps)
                   <Tooltip
                     contentStyle={tooltipStyle}
                     formatter={(v: number) => [fmtDollar(v), "Avg Fare"]}
-                    labelFormatter={(l) => `${l} miles`}
+                    labelFormatter={(l) => `${l}`}
                   />
                   <Line
                     type="monotone"

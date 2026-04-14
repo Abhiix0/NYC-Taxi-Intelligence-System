@@ -4,14 +4,10 @@ import WeeklyFlow from "@/components/dashboard/WeeklyFlow";
 import ValueInsights from "@/components/dashboard/ValueInsights";
 import HeroMap from "@/components/dashboard/HeroMap";
 import InsightPanel from "@/components/dashboard/InsightPanel";
-import { useCSV } from "@/hooks/useCSV";
+import { useAllData } from "@/hooks/useAllData";
 
 const Index = () => {
-  const { data: tripsData }    = useCSV("/data/trips_by_hour.csv");
-  const { data: revenueData }  = useCSV("/data/revenue_by_hour.csv");
-  const { data: weeklyData }   = useCSV("/data/trips_by_day.csv");
-  const { data: distanceFare } = useCSV("/data/distance_fare.csv");
-  const { data: tipsDist }     = useCSV("/data/tips_dist.csv");
+  const { kpis, tripsHour, revenueHour, tripsDay, distFare, tipsDist, hotspots, isLoading } = useAllData();
 
   return (
     <div className="min-h-screen px-4 py-8 md:px-8 lg:px-16 max-w-7xl mx-auto">
@@ -51,27 +47,27 @@ const Index = () => {
       </header>
 
       <div style={{ marginTop: "-8px" }}>
-        <HeroKPIs />
+        <HeroKPIs kpi={kpis[0]} />
       </div>
 
       <div className="section-divider" style={{ margin: "2rem auto", maxWidth: "60%" }} />
 
       <div style={{ marginTop: "6px" }}>
-        <CityRhythm tripsData={tripsData as any} revenueData={revenueData as any} />
+        <CityRhythm tripsData={tripsHour as any} revenueData={revenueHour as any} />
       </div>
 
       <div style={{ marginTop: "-4px" }}>
-        <WeeklyFlow tripsData={weeklyData as any} />
+        <WeeklyFlow tripsData={tripsDay as any} />
       </div>
 
       <div className="section-divider" style={{ margin: "1.5rem auto", maxWidth: "45%", transform: "rotate(0.5deg)" }} />
 
       <div style={{ marginTop: "10px" }}>
-        <ValueInsights distanceFare={distanceFare as any} tipsDist={tipsDist as any} />
+        <ValueInsights distanceFare={distFare as any} tipsDist={tipsDist as any} />
       </div>
 
       <div style={{ marginTop: "-6px" }}>
-        <HeroMap />
+        <HeroMap hotspots={hotspots} />
       </div>
 
       <div style={{ marginTop: "8px" }}>
