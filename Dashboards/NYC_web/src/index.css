@@ -1,0 +1,299 @@
+@import url('https://fonts.googleapis.com/css2?family=Kalam:wght@300;400;700&family=Patrick+Hand&family=JetBrains+Mono:wght@400;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 40 33% 97%;
+    --foreground: 0 0% 18%;
+    --card: 40 33% 97%;
+    --card-foreground: 0 0% 18%;
+    --popover: 40 33% 97%;
+    --popover-foreground: 0 0% 18%;
+    --primary: 214 55% 40%;
+    --primary-foreground: 40 33% 97%;
+    --secondary: 34 18% 89%;
+    --secondary-foreground: 0 0% 18%;
+    --muted: 34 18% 89%;
+    --muted-foreground: 0 0% 40%;
+    --accent: 0 100% 65%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 100% 65%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 0 0% 18%;
+    --input: 0 0% 18%;
+    --ring: 214 55% 40%;
+    --radius: 0.5rem;
+
+    --postit-yellow: 48 100% 88%;
+    --postit-pink: 340 80% 90%;
+    --postit-blue: 210 60% 90%;
+    --postit-green: 140 50% 88%;
+
+    --shadow-sketch: 4px 4px 0px hsl(0 0% 18%);
+    --shadow-sketch-hover: 2px 2px 0px hsl(0 0% 18%);
+    --shadow-sketch-pressed: 0px 0px 0px hsl(0 0% 18%);
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-body;
+    background-image: 
+      radial-gradient(circle, hsl(0 0% 18% / 0.07) 1px, transparent 1px),
+      linear-gradient(90deg, hsl(0 0% 18% / 0.03) 1px, transparent 1px),
+      linear-gradient(hsl(0 0% 18% / 0.03) 1px, transparent 1px);
+    background-size: 20px 20px, 40px 40px, 40px 40px;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Kalam', cursive;
+  }
+}
+
+/* SVG sketch filter */
+svg.sketch-filter {
+  filter: url(#sketch-roughness);
+}
+
+@layer components {
+  .font-mono-data {
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .sketch-card {
+    @apply relative border-2 border-foreground p-4;
+    box-shadow: var(--shadow-sketch);
+    border-radius: 2px 8px 4px 12px;
+    transition: all 0.12s ease-out;
+  }
+
+  .sketch-card:hover {
+    box-shadow: var(--shadow-sketch-hover);
+    transform: translate(2px, 2px);
+  }
+
+  .sketch-card:active {
+    box-shadow: var(--shadow-sketch-pressed);
+    transform: translate(4px, 4px);
+  }
+
+  .sketch-border-dashed {
+    @apply border-2 border-dashed border-foreground p-4;
+    border-radius: 4px 10px 6px 14px;
+    box-shadow: var(--shadow-sketch);
+  }
+
+  .sketch-border-dashed:hover {
+    box-shadow: var(--shadow-sketch-hover);
+    transform: translate(1px, 1px) !important;
+  }
+
+  .postit {
+    @apply relative p-4 border-2 border-foreground;
+    box-shadow: var(--shadow-sketch);
+    transition: all 0.12s ease-out;
+  }
+
+  .postit:hover {
+    box-shadow: var(--shadow-sketch-hover);
+    transform: translate(2px, 2px) rotate(0deg) !important;
+  }
+
+  .postit-yellow { background-color: hsl(var(--postit-yellow)); }
+  .postit-pink { background-color: hsl(var(--postit-pink)); }
+  .postit-blue { background-color: hsl(var(--postit-blue)); }
+  .postit-green { background-color: hsl(var(--postit-green)); }
+  .postit-white { background-color: hsl(var(--background)); }
+
+  .tape {
+    @apply absolute -top-3 left-1/2 -translate-x-1/2 h-5 bg-yellow-200/70 border border-yellow-400/50;
+    width: 4.5rem;
+    transform: translateX(-50%) rotate(-2deg);
+    z-index: 2;
+  }
+
+  .tape-left {
+    @apply absolute -top-2 left-4 h-5 bg-yellow-200/70 border border-yellow-400/50;
+    width: 3.5rem;
+    transform: rotate(-8deg);
+    z-index: 2;
+  }
+
+  .tape-right {
+    @apply absolute -top-2 right-4 h-5 bg-yellow-200/70 border border-yellow-400/50;
+    width: 3.5rem;
+    transform: rotate(6deg);
+    z-index: 2;
+  }
+
+  .pin {
+    @apply absolute -top-2 left-1/2 -translate-x-1/2 w-4 h-4 rounded-full bg-accent border-2 border-foreground;
+    z-index: 2;
+    box-shadow: 1px 1px 0px hsl(0 0% 18%);
+  }
+
+  .pin::after {
+    content: '';
+    @apply absolute w-2 h-2 rounded-full bg-white/40;
+    top: 2px;
+    left: 2px;
+  }
+
+  .annotation {
+    @apply font-heading text-sm;
+    color: hsl(var(--accent));
+  }
+
+  .annotation-blue {
+    @apply font-heading text-sm;
+    color: hsl(var(--primary));
+  }
+
+  /* Scribble underline effect */
+  .scribble-underline {
+    position: relative;
+    display: inline-block;
+  }
+  .scribble-underline::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: -4px;
+    right: -4px;
+    height: 4px;
+    background: hsl(var(--accent) / 0.4);
+    border-radius: 2px;
+    transform: rotate(-0.5deg);
+  }
+
+  /* Coffee stain decoration */
+  .coffee-stain {
+    position: relative;
+  }
+  .coffee-stain::after {
+    content: '';
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border: 2px solid hsl(30 40% 70% / 0.3);
+    top: -15px;
+    right: -10px;
+    transform: rotate(15deg);
+    pointer-events: none;
+  }
+
+  /* Doodle circle around text */
+  .doodle-circle {
+    position: relative;
+  }
+  .doodle-circle::before {
+    content: '';
+    position: absolute;
+    inset: -6px -10px;
+    border: 2px solid hsl(var(--accent));
+    border-radius: 45% 55% 50% 48% / 52% 46% 54% 48%;
+    transform: rotate(-1deg);
+    pointer-events: none;
+  }
+
+  .rotate-1 { transform: rotate(-1.5deg); }
+  .rotate-2 { transform: rotate(1.8deg); }
+  .rotate-3 { transform: rotate(-0.8deg); }
+  .rotate-4 { transform: rotate(2.2deg); }
+  .rotate-5 { transform: rotate(-2deg); }
+
+  .jiggle:hover {
+    animation: jiggle 0.3s ease-in-out;
+  }
+
+  @keyframes jiggle {
+    0%, 100% { transform: rotate(0deg); }
+    25% { transform: rotate(-2deg); }
+    50% { transform: rotate(1.5deg); }
+    75% { transform: rotate(-1deg); }
+  }
+
+  /* Draw-in animation for chart containers */
+  @keyframes sketch-in {
+    0% {
+      clip-path: inset(0 100% 0 0);
+      opacity: 0.5;
+    }
+    100% {
+      clip-path: inset(0 0 0 0);
+      opacity: 1;
+    }
+  }
+
+  .sketch-animate-in {
+    animation: sketch-in 0.8s ease-out forwards;
+  }
+
+  /* Wobble border via clip-path on pseudo */
+  .wobble-border {
+    position: relative;
+  }
+  .wobble-border::before {
+    content: '';
+    position: absolute;
+    inset: -3px;
+    border: 3px solid hsl(0 0% 18%);
+    border-radius: 3px 12px 5px 15px;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  /* Margin note style */
+  .margin-note {
+    @apply absolute font-heading text-xs;
+    color: hsl(var(--accent));
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    right: -28px;
+    top: 50%;
+    translate: 0 -50%;
+    opacity: 0.7;
+  }
+
+  /* Section divider doodle */
+  .section-divider {
+    height: 2px;
+    background: repeating-linear-gradient(
+      90deg,
+      hsl(0 0% 18% / 0.3) 0px,
+      hsl(0 0% 18% / 0.3) 8px,
+      transparent 8px,
+      transparent 14px
+    );
+    margin: 1rem 0;
+    transform: rotate(-0.3deg);
+  }
+
+  /* Fade-in transition for chart data */
+  @keyframes chart-fade-in {
+    from { opacity: 0; transform: translateY(6px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .chart-loaded {
+    animation: chart-fade-in 0.4s ease-out forwards;
+  }
+
+  /* Subtle lift on chart card hover — overrides the sketch press-down */
+  .chart-card-hover {
+    transition: box-shadow 0.15s ease-out, transform 0.15s ease-out;
+  }
+
+  .chart-card-hover:hover {
+    box-shadow: 6px 6px 0px hsl(0 0% 18%);
+    transform: translate(-1px, -1px) !important;
+  }
+}
