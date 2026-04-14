@@ -16,11 +16,22 @@ const borderRadii = [
   "8px 4px 6px 12px",
 ];
 
+// Safe numeric coercion — guards against undefined, null, NaN, and non-finite values
+function safeNum(v: unknown): number | null {
+  const n = Number(v);
+  return isFinite(n) ? n : null;
+}
+
 const HeroKPIs = ({ kpi }: HeroKPIsProps) => {
-  const totalTrips   = kpi ? `${(kpi.total_trips / 1_000_000).toFixed(1)}M` : "—";
-  const totalRevenue = kpi ? `$${(kpi.total_revenue / 1_000_000).toFixed(1)}M` : "—";
-  const avgFare      = kpi ? `$${kpi.avg_fare.toFixed(2)}` : "—";
-  const tipRate      = kpi ? `${kpi.tip_rate.toFixed(1)}%` : "—";
+  const trips   = safeNum(kpi?.total_trips);
+  const revenue = safeNum(kpi?.total_revenue);
+  const fare    = safeNum(kpi?.avg_fare);
+  const tip     = safeNum(kpi?.tip_rate);
+
+  const totalTrips   = trips   !== null ? `${(trips / 1_000_000).toFixed(1)}M`   : "—";
+  const totalRevenue = revenue !== null ? `$${(revenue / 1_000_000).toFixed(1)}M` : "—";
+  const avgFare      = fare    !== null ? `$${fare.toFixed(2)}`                   : "—";
+  const tipRate      = tip     !== null ? `${tip.toFixed(1)}%`                    : "—";
 
   const cards = [
     { label: "Total Trips",   value: totalTrips,   bg: "postit-yellow", rotation: "rotate(-2.5deg)", decoration: "tape",      offset: "0px"  },

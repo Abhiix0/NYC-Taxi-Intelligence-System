@@ -1,3 +1,5 @@
+import ChartSkeleton from "./ChartSkeleton";
+
 interface HotspotRow {
   pickup_latitude: number;
   pickup_longitude: number;
@@ -19,7 +21,8 @@ const project = (lat: number, lng: number) => {
 };
 
 const HeroMap = ({ hotspots = [] }: HeroMapProps) => {
-  const maxCount = Math.max(...hotspots.map(h => h.trip_count), 1);
+  const sorted = [...hotspots].sort((a, b) => b.trip_count - a.trip_count).slice(0, 200);
+  const topCount = sorted[0]?.trip_count ?? 1;
 
   return (
     <section className="mb-14 relative">
@@ -53,67 +56,69 @@ const HeroMap = ({ hotspots = [] }: HeroMapProps) => {
           <div className="pin" style={{ top: '-10px' }} />
 
           <div className="p-3">
-            <svg
-              viewBox={`0 0 ${MAP_WIDTH} ${MAP_HEIGHT}`}
-              className="w-full h-auto"
-              style={{ minHeight: 300, maxHeight: 500 }}
-            >
-              {/* Paper background */}
-              <rect x="0" y="0" width={MAP_WIDTH} height={MAP_HEIGHT} fill="hsl(34, 18%, 92%)" stroke="none" />
+            {hotspots.length === 0 ? (
+              <div style={{ minHeight: 300 }}>
+                <ChartSkeleton bars={12} />
+              </div>
+            ) : (
+              <svg
+                viewBox={`0 0 ${MAP_WIDTH} ${MAP_HEIGHT}`}
+                className="w-full h-auto"
+                style={{ minHeight: 300, maxHeight: 500 }}
+              >
+                {/* Paper background */}
+                <rect x="0" y="0" width={MAP_WIDTH} height={MAP_HEIGHT} fill="hsl(34, 18%, 92%)" stroke="none" />
 
-              {/* Grid lines (notebook style) */}
-              {Array.from({ length: 11 }).map((_, i) => (
-                <line key={`h${i}`} x1="0" y1={i * 50} x2={MAP_WIDTH} y2={i * 50} stroke="#2d2d2d" strokeOpacity="0.06" strokeWidth="1" />
+                {/* Grid lines (notebook style) */}
+                {Array.from({ length: 11 }).map((_, i) => (
+                  <line key={`h${i}`} x1="0" y1={i * 50} x2={MAP_WIDTH} y2={i * 50} stroke="#2d2d2d" strokeOpacity="0.06" strokeWidth="1" />
+                ))}
+                {Array.from({ length: 17 }).map((_, i) => (
+                  <line key={`v${i}`} x1={i * 50} y1="0" x2={i * 50} y2={MAP_HEIGHT} stroke="#2d2d2d" strokeOpacity="0.06" strokeWidth="1" />
+                ))}
+
+                {/* Water areas (hand-drawn style) */}
+                <path d="M 0 200 Q 40 175 80 210 Q 60 250 100 280 L 100 500 L 0 500 Z" fill="hsl(210, 60%, 92%)" stroke="hsl(214, 55%, 40%)" strokeWidth="1.5" strokeDasharray="6 4" opacity="0.7" />
+                <path d="M 700 0 Q 740 40 720 140 Q 770 190 800 280 L 800 0 Z" fill="hsl(210, 60%, 92%)" stroke="hsl(214, 55%, 40%)" strokeWidth="1.5" strokeDasharray="6 4" opacity="0.7" />
+                <path d="M 350 450 Q 400 430 500 460 Q 550 470 600 450 L 600 500 L 350 500 Z" fill="hsl(210, 60%, 92%)" stroke="hsl(214, 55%, 40%)" strokeWidth="1" strokeDasharray="4 3" opacity="0.5" />
+
+                {/* Density heatmap circles */}
+                {sorted.map((spot, i) => {
+                  const { x, y } = project(spot.pickup_latitude, spot.pickup_longitude);
+                  const norm = spot.trip_count / topCount;
+                  const r = norm * 18 + 4;
+                  const opacity = norm * 0.6 + 0.15;
+                  return (
+                    <circle key={i} cx={x} cy={y} r={r} fill="#ff4d4d" fillOpacity={opacity} stroke="none" />
+                  );
+                })}
+
+                {/* Compass doodle */}
+                <g transform="translate(720, 420)">
+                  <circle cx="0" cy="0" r="20" fill="none" stroke="#2d2d2d" strokeWidth="1.5" opacity="0.3" />
+                  <text x="-3" y="-10" fontFamily="'Kalam'" fontSize="10" fill="#2d2d2d" opacity="0.4">N</text>
+                  <line x1="0" y1="-6" x2="0" y2="6" stroke="#2d2d2d" strokeWidth="1.5" opacity="0.3" />
+                  <line x1="-6" y1="0" x2="6" y2="0" stroke="#2d2d2d" strokeWidth="1.5" opacity="0.3" />
+                </g>
+
+                {/* Scale bar */}
+                <g transform="translate(30, 470)">
+                  <line x1="0" y1="0" x2="60" y2="0" stroke="#2d2d2d" strokeWidth="1.5" opacity="0.3" />
+                  <line x1="0" y1="-4" x2="0" y2="4" stroke="#2d2d2d" strokeWidth="1" opacity="0.3" />
+                  <line x1="60" y1="-4" x2="60" y2="4" stroke="#2d2d2d" strokeWidth="1" opacity="0.3" />
+                  <text x="15" y="14" fontFamily="'Patrick Hand'" fontSize="10" fill="#2d2d2d" opacity="0.3">~2 mi</text>
+                </g>
+              </svg>
+            )}
+
+            {/* Legend */}
+            <div style={{ display: 'flex', gap: '12px', padding: '8px 12px', fontSize: '11px', fontFamily: "'Patrick Hand'", opacity: 0.7, alignItems: 'center' }}>
+              <span>fewer trips</span>
+              {[0.2, 0.4, 0.6, 0.8, 1.0].map((v, i) => (
+                <div key={i} style={{ width: v * 16 + 4, height: v * 16 + 4, borderRadius: '50%', background: '#ff4d4d', opacity: v * 0.6 + 0.15 }} />
               ))}
-              {Array.from({ length: 17 }).map((_, i) => (
-                <line key={`v${i}`} x1={i * 50} y1="0" x2={i * 50} y2={MAP_HEIGHT} stroke="#2d2d2d" strokeOpacity="0.06" strokeWidth="1" />
-              ))}
-
-              {/* Water areas (hand-drawn style) */}
-              <path d="M 0 200 Q 40 175 80 210 Q 60 250 100 280 L 100 500 L 0 500 Z" fill="hsl(210, 60%, 92%)" stroke="hsl(214, 55%, 40%)" strokeWidth="1.5" strokeDasharray="6 4" opacity="0.7" />
-              <path d="M 700 0 Q 740 40 720 140 Q 770 190 800 280 L 800 0 Z" fill="hsl(210, 60%, 92%)" stroke="hsl(214, 55%, 40%)" strokeWidth="1.5" strokeDasharray="6 4" opacity="0.7" />
-              <path d="M 350 450 Q 400 430 500 460 Q 550 470 600 450 L 600 500 L 350 500 Z" fill="hsl(210, 60%, 92%)" stroke="hsl(214, 55%, 40%)" strokeWidth="1" strokeDasharray="4 3" opacity="0.5" />
-
-              {/* Hotspots from CSV data */}
-              {hotspots.map((spot, i) => {
-                const { x, y } = project(spot.pickup_latitude, spot.pickup_longitude);
-                const intensity = spot.trip_count / maxCount;
-                const r = intensity * 28 + 8;
-                return (
-                  <g key={i}>
-                    {/* Outer glow */}
-                    <circle cx={x} cy={y} r={r + 4} fill="#ff4d4d" fillOpacity={0.08} />
-                    {/* Main circle */}
-                    <circle cx={x} cy={y} r={r} fill="#ff4d4d" fillOpacity={0.2} stroke="#ff4d4d" strokeWidth="2" strokeDasharray={intensity > 0.7 ? "0" : "4 3"} />
-                    {/* Center dot */}
-                    <circle cx={x} cy={y} r={4} fill="#ff4d4d" stroke="#2d2d2d" strokeWidth="1.5" />
-                  </g>
-                );
-              })}
-
-              {/* Hand-drawn annotations */}
-              <g>
-                <path d="M 450 70 Q 430 95 420 125" fill="none" stroke="#ff4d4d" strokeWidth="2" />
-                <polygon points="415,120 420,132 425,120" fill="#ff4d4d" />
-                <text x="435" y="60" fontFamily="'Kalam'" fontSize="14" fill="#ff4d4d" fontWeight="bold">Hotspot!</text>
-              </g>
-
-              {/* Compass doodle */}
-              <g transform="translate(720, 420)">
-                <circle cx="0" cy="0" r="20" fill="none" stroke="#2d2d2d" strokeWidth="1.5" opacity="0.3" />
-                <text x="-3" y="-10" fontFamily="'Kalam'" fontSize="10" fill="#2d2d2d" opacity="0.4">N</text>
-                <line x1="0" y1="-6" x2="0" y2="6" stroke="#2d2d2d" strokeWidth="1.5" opacity="0.3" />
-                <line x1="-6" y1="0" x2="6" y2="0" stroke="#2d2d2d" strokeWidth="1.5" opacity="0.3" />
-              </g>
-
-              {/* Scale bar */}
-              <g transform="translate(30, 470)">
-                <line x1="0" y1="0" x2="60" y2="0" stroke="#2d2d2d" strokeWidth="1.5" opacity="0.3" />
-                <line x1="0" y1="-4" x2="0" y2="4" stroke="#2d2d2d" strokeWidth="1" opacity="0.3" />
-                <line x1="60" y1="-4" x2="60" y2="4" stroke="#2d2d2d" strokeWidth="1" opacity="0.3" />
-                <text x="15" y="14" fontFamily="'Patrick Hand'" fontSize="10" fill="#2d2d2d" opacity="0.3">~2 mi</text>
-              </g>
-            </svg>
+              <span>more trips</span>
+            </div>
           </div>
         </div>
       </div>
