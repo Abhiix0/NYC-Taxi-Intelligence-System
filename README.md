@@ -1,130 +1,185 @@
-# 🚕 NYC Taxi Intelligence System (NTIS)
+# NYC Taxi Intelligence System (NTIS)
 
-A full-stack data analytics dashboard transforming **7.3 million NYC taxi trips** into an interactive, insight-driven visual experience.
+The NYC Taxi Intelligence System (NTIS) is an end-to-end data analytics project that transforms large-scale raw taxi trip data into structured insights and interactive visualizations.
 
-Built to compare traditional analytics workflows (Python EDA + Power BI) with a custom-built React dashboard — emphasizing real-time data loading, modular architecture, and scalable frontend data pipelines.
-
----
-
-## ✨ Features
-
-- **Interactive Dashboard** — KPI cards, hourly charts, weekly flow, fare analysis, tip distribution, and a geospatial heatmap
-- **Sketch Aesthetic** — Hand-drawn post-it note design system with animated charts
-- **Dark Mode** — Full theme toggle between light (paper) and dark (charcoal) modes
-- **Modular Data Pipeline** — Python → CSV → React, cleanly separated
-- **Power BI Comparison** — Screenshot of equivalent Power BI dashboard included
+This project demonstrates the complete data lifecycle — from data ingestion and cleaning to exploratory analysis and deployment of a production-ready web dashboard.
 
 ---
 
-## 🛠️ Tech Stack
+## Overview
 
-| Layer | Tech |
-|---|---|
-| Data Cleaning | Python, pandas |
-| EDA | Jupyter, seaborn, matplotlib |
-| Export Pipeline | Python (pandas aggregations) |
-| Frontend | React 18, Vite, TypeScript |
-| Charts | Recharts |
-| Styling | Tailwind CSS, shadcn/ui |
-| CSV Parsing | PapaParse |
-| State | TanStack Query v5 |
+New York City generates millions of taxi trips, producing a rich dataset for analyzing urban mobility patterns. This project focuses on extracting meaningful insights related to:
+
+- Temporal demand patterns
+- Revenue trends
+- Distance-to-fare relationships
+- Tipping behavior
+- Geographic concentration of trips
+
+The final deliverable is an interactive web-based dashboard supported by efficient data pipelines and optimized frontend architecture.
 
 ---
 
-## 📁 Project Structure
+## Key Features
+
+- End-to-end data pipeline (raw data to visualization)
+- Efficient handling of large datasets using preprocessing
+- Interactive web dashboard with real map integration
+- Time-based and behavioral analytics
+- Clean and scalable project architecture
+
+---
+
+## Project Structure
 
 ```
-NTIS/
-├── Notebooks/
-│   ├── 01_cleaning.ipynb     # Data cleaning: 12.4M → 7.3M rows
-│   └── 02_eda.ipynb          # Exploratory analysis with findings
-├── src/
-│   └── export_frontend.py    # Generates 7 aggregated CSVs
-├── scripts/
-│   └── build_data.sh         # End-to-end pipeline automation
+
+NYC Taxi Intelligence System/
+│
 ├── Data/
-│   ├── raw/                  # Place raw CSVs here (not committed)
-│   ├── cleaned/              # Cleaned dataset (not committed)
-│   └── frontend/             # Aggregated output CSVs
+│   ├── raw/                # Original dataset files
+│   ├── cleaned/            # Processed dataset
+│   └── frontend/           # Aggregated data for frontend
+│
+├── notebooks/
+│   ├── 01_cleaning.ipynb   # Data cleaning pipeline
+│   └── 02_eda.ipynb        # Exploratory data analysis
+│
 ├── Dashboards/
-│   ├── NYC_web/              # React + Vite frontend
-│   │   ├── public/data/      # CSV files served to frontend
-│   │   └── src/
-│   │       ├── components/dashboard/  # Chart components
-│   │       ├── hooks/                 # Data fetching hooks
-│   │       ├── lib/                   # Utilities
-│   │       └── pages/                 # Route pages
-│   └── powerbi/
-│       └── Dashboard.png     # Power BI comparison screenshot
-├── Reports/
-│   └── insights.md           # Key findings from EDA
-└── requirements.txt          # Python dependencies
-```
+│   ├── PowerBI/            # Power BI dashboard files
+│   └── NYC_web/            # React-based web dashboard
+│       ├── public/data/    # Static CSV files for frontend
+│       └── src/            # Source code
+│
+└── README.md
+
+````
 
 ---
 
-## ⚙️ Prerequisites
+## Technology Stack
 
-- Python 3.11+
-- Node.js 18+ / Bun
-- pip
+### Data Processing
+- Python (Pandas, NumPy)
+- Jupyter Notebook
+
+### Visualization
+- Power BI
+
+### Web Application
+- React (TypeScript)
+- Vite
+- Tailwind CSS
+- Recharts
+- Leaflet
+- PapaParse
 
 ---
 
-## 🚀 Data Pipeline
+## Data Pipeline
 
-Run the full pipeline with one command:
+### Data Cleaning
+- Standardized inconsistent column names
+- Removed null and invalid values
+- Filtered out unrealistic coordinates and outliers
+- Optimized dataset size for processing
+
+### Feature Engineering
+- Derived key attributes such as:
+  - Pickup hour
+  - Day of week
+- Enabled time-based analysis
+
+### Aggregation for Frontend
+
+To ensure performance, the dataset is transformed into lightweight aggregated files:
+
+| File | Description |
+|------|------------|
+| trips_by_hour.csv | Number of trips per hour |
+| revenue_by_hour.csv | Revenue aggregated by hour |
+| trips_by_day.csv | Trip counts per weekday |
+| distance_fare.csv | Average fare by distance |
+| tips_dist.csv | Distribution of tip amounts |
+| map_data.csv | Sampled geographic coordinates |
+
+---
+
+## Frontend Architecture
+
+The frontend is designed for performance and scalability:
+
+- Aggregated CSV files are stored in `/public/data`
+- Data is fetched dynamically using a custom React hook
+- Parsing is handled using PapaParse
+- Avoids loading large raw datasets in the browser
+
+This approach ensures:
+
+- Fast load times
+- Low memory consumption
+- Maintainable and scalable structure
+
+---
+
+## Map Visualization
+
+- Built using Leaflet
+- Uses real-world map tiles
+- Displays trip density through marker overlays
+- Coordinates filtered to valid NYC bounds
+
+---
+
+## Key Insights
+
+- Peak demand occurs during evening hours (approximately 5 PM to 10 PM)
+- Higher trip volumes are observed on weekends, particularly Friday and Saturday
+- Fare values show a direct correlation with trip distance
+- A significant portion of trips include low or no tips
+- Trip density is highest in central urban regions such as Manhattan
+
+---
+
+## Running the Project Locally
 
 ```bash
-bash scripts/build_data.sh
-```
-
-This will:
-1. Run `src/export_frontend.py` to generate 7 aggregated CSVs from the cleaned data
-2. Copy the CSVs to `Dashboards/NYC_web/public/data/`
-3. Verify all 7 files are present
-
-> If `Data/cleaned/cleaned_taxi_data.csv` is not present, the script skips the Python step and copies existing `Data/frontend/` CSVs directly.
-
-To regenerate from raw data:
-1. Place raw CSVs in `Data/raw/`
-2. Run `Notebooks/01_cleaning.ipynb`
-3. Run `bash scripts/build_data.sh`
-
----
-
-## 🖥️ Running the Dashboard
-
-```bash
+git clone <repository-url>
 cd Dashboards/NYC_web
-npm install       # or: bun install
-npm run dev       # or: bun dev
+npm install
+npm run dev
+````
+
+The application will be available at:
+
+```
+http://localhost:5173
 ```
 
-Open [http://localhost:5173](http://localhost:5173)
+---
+
+## Deployment
+
+The web dashboard can be deployed using platforms such as:
+
+* Vercel
+* Netlify
+* Render
+
+Ensure that the `/public/data` directory is included in the deployment to allow access to CSV files.
 
 ---
 
-## 📊 Data Files (public/data/)
+## Future Enhancements
 
-| File | Rows | Description |
-|---|---|---|
-| `kpis.csv` | 1 | Total trips, revenue, avg fare, tip rate |
-| `trips_by_hour.csv` | 24 | Trip count per hour of day |
-| `revenue_by_hour.csv` | 24 | Revenue per hour of day |
-| `trips_by_day.csv` | 7 | Trip count per day of week |
-| `distance_fare.csv` | 9 | Avg fare by distance bucket |
-| `tips_dist.csv` | 4 | Trip count by tip category |
-| `map_hotspots.csv` | 50 | Top pickup lat/lng coordinates |
+* Heatmap-based geographic visualization
+* Advanced filtering (time ranges, zones)
+* Real-time data integration
+* Predictive analytics using machine learning
+* Enhanced interactivity and user controls
 
 ---
 
-## 🔑 Key Findings
+## Author
 
-- Evening peak demand at **hour 18–20** (6–8 PM)
-- **Saturday** is the busiest day (1.35M trips)
-- **40%** of trips show $0 recorded tip (includes cash payments)
-- Fare-distance correlation: **r ≈ 0.88**
-- **Midtown Manhattan** dominates pickup density
-
-See [`Reports/insights.md`](Reports/insights.md) for full analysis.
+Abhiix0
