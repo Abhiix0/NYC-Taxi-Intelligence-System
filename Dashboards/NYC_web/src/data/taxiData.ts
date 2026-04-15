@@ -1,8 +1,8 @@
 export const kpiData = {
-  totalTrips: "12.4M",
-  totalRevenue: "$198.7M",
+  totalTrips: "7.3M",
+  totalRevenue: "$98.2M",
   avgFare: "$16.02",
-  tipRate: "18.3%",
+  tipRate: "61.2%",
 };
 
 export const pickupHotspots = [
@@ -19,9 +19,9 @@ export const pickupHotspots = [
 ];
 
 export const insights = [
-  { text: "Short trips (<3 mi) dominate", highlight: "Short trips", color: "accent" as const },
-  { text: "Evening peak: 5–10 PM rush", highlight: "5–10 PM", color: "primary" as const },
-  { text: "Thu–Sat are the busiest days", highlight: "Thu–Sat", color: "accent" as const },
-  { text: "Low tipping: 34% tip nothing", highlight: "34%", color: "accent" as const },
-  { text: "Midtown & airports = hotspots", highlight: "hotspots", color: "primary" as const },
+  { text: "Short trips (<3 mi) make up the bulk of NYC rides", highlight: "Short trips", color: "accent" as const },
+  { text: "Evening surge: 6–10 PM is peak demand", highlight: "6–10 PM", color: "primary" as const },
+  { text: "Thu–Sat are the 3 busiest days of the week", highlight: "Thu–Sat", color: "accent" as const },
+  { text: "40% of rides have zero tip recorded", highlight: "40%", color: "accent" as const },
+  { text: "Midtown & JFK/LGA airports dominate pickup maps", highlight: "Midtown & JFK/LGA", color: "primary" as const },
 ];
