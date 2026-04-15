@@ -3,7 +3,7 @@
  * Used as a drop-in replacement for plain "Loading..." text.
  */
 const ChartSkeleton = ({ bars = 8 }: { bars?: number }) => (
-  <div className="h-full flex flex-col justify-end gap-1 px-2 pb-2 animate-pulse">
+  <div className="relative h-full flex flex-col justify-end gap-1 px-2 pb-2 animate-pulse">
     {/* Fake y-axis line */}
     <div className="absolute left-6 top-2 bottom-8 w-px bg-foreground/10" />
     {/* Fake x-axis line */}

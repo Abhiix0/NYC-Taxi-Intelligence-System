@@ -16,7 +16,7 @@ export default {
       fontFamily: {
         heading: ["'Kalam'", "cursive"],
         body: ["'Patrick Hand'", "cursive"],
-        mono: ["'JetBrains Mono'", "monospace"],
+        "mono-data": ["'JetBrains Mono'", "monospace"],
       },
       colors: {
         border: "hsl(var(--border))",
