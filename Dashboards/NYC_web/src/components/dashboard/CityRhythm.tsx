@@ -10,7 +10,14 @@ interface CityRhythmProps {
   revenueData?: RevenueRow[];
 }
 
-const CityRhythm = ({ tripsData = [], revenueData = [] }: CityRhythmProps) => (
+const CityRhythm = ({ tripsData = [], revenueData = [] }: CityRhythmProps) => {
+  const peakHour = tripsData.length > 0
+    ? tripsData.reduce((max, row) => row.trip_count > max.trip_count ? row : max, tripsData[0]).pickup_hour
+    : 18;
+  const revPeakHour = revenueData.length > 0
+    ? revenueData.reduce((max, row) => row.total_revenue > max.total_revenue ? row : max, revenueData[0]).pickup_hour
+    : 18;
+  return (
   <section className="mb-14 relative">
     <h2 className="font-heading text-3xl md:text-4xl font-bold mb-2" style={{ transform: "rotate(0.5deg)" }}>
       ⏰ City Rhythm
@@ -48,7 +55,7 @@ const CityRhythm = ({ tripsData = [], revenueData = [] }: CityRhythmProps) => (
                     formatter={(v: number) => [fmtShort(v), "Trips"]}
                     labelFormatter={(l) => `Hour: ${l}:00`}
                   />
-                  <ReferenceLine x={18} stroke="#ff4d4d" strokeDasharray="5 5" label={{ value: "🔥 Peak!", fontFamily: "'Kalam'", fill: "#ff4d4d", fontSize: 14 }} />
+                  <ReferenceLine x={peakHour} stroke="#ff4d4d" strokeDasharray="5 5" label={{ value: `🔥 Peak!`, fontFamily: "'Kalam'", fill: "#ff4d4d", fontSize: 14 }} />
                   <Bar dataKey="trip_count" fill="hsl(214, 55%, 40%)" radius={[2, 4, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
@@ -80,7 +87,7 @@ const CityRhythm = ({ tripsData = [], revenueData = [] }: CityRhythmProps) => (
                     formatter={(v: number) => [fmtDollar(v), "Revenue"]}
                     labelFormatter={(l) => `Hour: ${l}:00`}
                   />
-                  <ReferenceLine x={18} stroke="hsl(214, 55%, 40%)" strokeDasharray="4 4" label={{ value: "💸", fontSize: 16 }} />
+                  <ReferenceLine x={revPeakHour} stroke="hsl(214, 55%, 40%)" strokeDasharray="4 4" label={{ value: "💸", fontSize: 16 }} />
                   <Line type="monotone" dataKey="total_revenue" stroke="#ff4d4d" strokeWidth={3} dot={{ r: 3, fill: "#ff4d4d", stroke: "#2d2d2d", strokeWidth: 1.5 }} />
                 </LineChart>
               </ResponsiveContainer>
@@ -94,6 +101,7 @@ const CityRhythm = ({ tripsData = [], revenueData = [] }: CityRhythmProps) => (
       </div>
     </div>
   </section>
-);
+  );
+};
 
 export default CityRhythm;

@@ -10,11 +10,11 @@ interface HeroMapProps {
   hotspots?: HotspotRow[];
 }
 
-const MAP_WIDTH = 800;
-const MAP_HEIGHT = 500;
+const MAP_WIDTH = 900;
+const MAP_HEIGHT = 560;
 
 const project = (lat: number, lng: number) => {
-  const minLat = 40.55, maxLat = 40.85, minLng = -74.05, maxLng = -73.75;
+  const minLat = 40.50, maxLat = 40.92, minLng = -74.10, maxLng = -73.70;
   const x = ((lng - minLng) / (maxLng - minLng)) * MAP_WIDTH;
   const y = ((maxLat - lat) / (maxLat - minLat)) * MAP_HEIGHT;
   return { x, y };
@@ -64,16 +64,16 @@ const HeroMap = ({ hotspots = [] }: HeroMapProps) => {
               <svg
                 viewBox={`0 0 ${MAP_WIDTH} ${MAP_HEIGHT}`}
                 className="w-full h-auto"
-                style={{ minHeight: 300, maxHeight: 500 }}
+                style={{ minHeight: 340, maxHeight: 560 }}
               >
                 {/* Paper background */}
                 <rect x="0" y="0" width={MAP_WIDTH} height={MAP_HEIGHT} fill="hsl(34, 18%, 92%)" stroke="none" />
 
                 {/* Grid lines (notebook style) */}
-                {Array.from({ length: 11 }).map((_, i) => (
+                {Array.from({ length: 13 }).map((_, i) => (
                   <line key={`h${i}`} x1="0" y1={i * 50} x2={MAP_WIDTH} y2={i * 50} stroke="#2d2d2d" strokeOpacity="0.06" strokeWidth="1" />
                 ))}
-                {Array.from({ length: 17 }).map((_, i) => (
+                {Array.from({ length: 19 }).map((_, i) => (
                   <line key={`v${i}`} x1={i * 50} y1="0" x2={i * 50} y2={MAP_HEIGHT} stroke="#2d2d2d" strokeOpacity="0.06" strokeWidth="1" />
                 ))}
 
@@ -94,7 +94,7 @@ const HeroMap = ({ hotspots = [] }: HeroMapProps) => {
                 })}
 
                 {/* Compass doodle */}
-                <g transform="translate(720, 420)">
+                <g transform="translate(840, 520)">
                   <circle cx="0" cy="0" r="20" fill="none" stroke="#2d2d2d" strokeWidth="1.5" opacity="0.3" />
                   <text x="-3" y="-10" fontFamily="'Kalam'" fontSize="10" fill="#2d2d2d" opacity="0.4">N</text>
                   <line x1="0" y1="-6" x2="0" y2="6" stroke="#2d2d2d" strokeWidth="1.5" opacity="0.3" />
@@ -102,7 +102,7 @@ const HeroMap = ({ hotspots = [] }: HeroMapProps) => {
                 </g>
 
                 {/* Scale bar */}
-                <g transform="translate(30, 470)">
+                <g transform="translate(30, 530)">
                   <line x1="0" y1="0" x2="60" y2="0" stroke="#2d2d2d" strokeWidth="1.5" opacity="0.3" />
                   <line x1="0" y1="-4" x2="0" y2="4" stroke="#2d2d2d" strokeWidth="1" opacity="0.3" />
                   <line x1="60" y1="-4" x2="60" y2="4" stroke="#2d2d2d" strokeWidth="1" opacity="0.3" />
