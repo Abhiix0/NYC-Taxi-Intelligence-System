@@ -4,6 +4,7 @@ import WeeklyFlow from "@/components/dashboard/WeeklyFlow";
 import ValueInsights from "@/components/dashboard/ValueInsights";
 import HeroMap from "@/components/dashboard/HeroMap";
 import InsightPanel from "@/components/dashboard/InsightPanel";
+import ThemeToggle from "@/components/dashboard/ThemeToggle";
 import { useAllData } from "@/hooks/useAllData";
 
 const Index = () => {
@@ -44,6 +45,9 @@ const Index = () => {
           <path d="M 10 50 Q 20 20, 50 10" fill="none" stroke="hsl(0 0% 18%)" strokeWidth="2" strokeDasharray="4 3" />
           <polygon points="48,6 54,12 46,14" fill="hsl(0 0% 18%)" />
         </svg>
+        <div className="absolute top-0 right-0" style={{ transform: "rotate(-1deg)" }}>
+          <ThemeToggle />
+        </div>
       </header>
 
       <div style={{ marginTop: "-8px" }}>
