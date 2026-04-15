@@ -7,7 +7,7 @@ import InsightPanel from "@/components/dashboard/InsightPanel";
 import { useAllData } from "@/hooks/useAllData";
 
 const Index = () => {
-  const { kpis, tripsHour, revenueHour, tripsDay, distFare, tipsDist, hotspots, isLoading } = useAllData();
+  const { kpis, tripsHour, revenueHour, tripsDay, distFare, tipsDist, hotspots, isLoading, isError } = useAllData();
 
   return (
     <div className="min-h-screen px-4 py-8 md:px-8 lg:px-16 max-w-7xl mx-auto">
@@ -47,6 +47,21 @@ const Index = () => {
       </header>
 
       <div style={{ marginTop: "-8px" }}>
+        {isLoading && (
+          <div className="text-center mb-8 font-heading text-muted-foreground" style={{ transform: "rotate(-0.3deg)" }}>
+            <span className="animate-pulse">📊 Loading 12.4M trips...</span>
+          </div>
+        )}
+        {isError && (
+          <div
+            className="postit postit-pink mb-8 text-center"
+            style={{ transform: "rotate(-0.5deg)", maxWidth: "600px", margin: "0 auto 2rem" }}
+          >
+            <div className="tape" />
+            <p className="font-heading text-lg font-bold mt-4">⚠️ Some data failed to load</p>
+            <p className="font-body text-sm text-muted-foreground mt-1">Check that all CSV files exist in public/data/ and refresh the page.</p>
+          </div>
+        )}
         <HeroKPIs kpi={kpis[0]} />
       </div>
 
